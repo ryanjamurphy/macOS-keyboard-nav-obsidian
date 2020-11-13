@@ -1,6 +1,6 @@
 {
   "name": "macOS-keyboard-nav-obsidian",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "This plugin adds alt+up arrow and alt+down arrow keyboard navigation to Obsidian.",
   "main": "main.js",
   "scripts": {
