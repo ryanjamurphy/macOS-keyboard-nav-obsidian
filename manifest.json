@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.1",
+	"id": "macOS-keyboard-nav-obsidian",
+	"name": "macOS Keyboard Navigation",
+	"version": "1.0.0",
 	"minAppVersion": "0.9.12",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md/about",
+	"description": "This plugin adds alt+up arrow and alt+down arrow keyboard navigation to Obsidian.",
+	"author": "ryanjamurphy",
+	"authorUrl": "https://axle.design",
 	"isDesktopOnly": false
 }

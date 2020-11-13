@@ -2,82 +2,41 @@ import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian'
 
 export default class MyPlugin extends Plugin {
 	onload() {
-		console.log('loading plugin');
-
-		this.addRibbonIcon('dice', 'Sample Plugin', () => {
-			new Notice('This is a notice!');
-		});
-
-		this.addStatusBarItem().setText('Status Bar Text');
-
-		this.addCommand({
-			id: 'open-sample-modal',
-			name: 'Open Sample Modal',
-			// callback: () => {
-			// 	console.log('Simple Callback');
-			// },
-			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (leaf) {
-					if (!checking) {
-						new SampleModal(this.app).open();
+		console.log('Loading the macOS Keyboard Navigation plugin.');
+		let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
+		
+		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
+			if (keyboardPressEvent.getModifierState("Alt")) {
+				if (keyboardPressEvent.key == "ArrowUp") {
+					let cursor = editor.getCursor();
+					if (cursor.ch != 0) {
+						editor.setCursor(cursor.line, 0);
+					} else {
+						editor.setCursor((cursor.line - 1), 0);
 					}
-					return true;
+					console.log("Alt+↑ pressed")
 				}
-				return false;
 			}
 		});
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		this.registerEvent(this.app.on('codemirror', (cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
-		}));
-
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
+		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
+			if (keyboardPressEvent.getModifierState("Alt")) {
+				if (keyboardPressEvent.key == "ArrowDown") {
+					let cursor = editor.getCursor();
+					let doc = editor.getDoc();
+					let lineLength = doc.getLine(cursor.line).length;
+					if (cursor.ch != lineLength) {
+						editor.setCursor(cursor.line, lineLength);
+					} else {
+						editor.setCursor((cursor.line + 1), doc.getLine(cursor.line + 1).length);
+					}
+					console.log("Alt+↓ pressed")
+				}
+			}
 		});
-
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
 	onunload() {
-		console.log('unloading plugin');
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
-	display(): void {
-		let {containerEl} = this;
-
-		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange((value) => {
-					console.log('Secret: ' + value);
-				}));
-
+		console.log('Unloading the macOS Keyboard Navigation plugin.');
 	}
 }
