@@ -4,17 +4,30 @@ export default class MyPlugin extends Plugin {
 	onload() {
 		console.log('Loading the macOS Keyboard Navigation plugin.');
 		let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
+
+		let selectionDirection = "";
 		
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
 			if (keyboardPressEvent.getModifierState("Alt")) {
 				if (keyboardPressEvent.key == "ArrowUp") {
-					let cursor = editor.getCursor();
-					if (cursor.ch != 0) {
-						editor.setCursor(cursor.line, 0);
+					let cursorHead = editor.getCursor("head");
+					let cursorAnchor = editor.getCursor("anchor");
+					if (keyboardPressEvent.getModifierState("Shift")) { // select up
+
+						let doc = editor.getDoc();
+						if (cursorHead.ch != 0) {
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line, ch:0}, {scroll: true});
+						} else {
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line - 1, ch:0}, {scroll: true});
+						}
 					} else {
-						editor.setCursor((cursor.line - 1), 0);
+						// move up
+						if (cursorHead.ch != 0) {
+							editor.setCursor(cursorHead.line, 0);
+						} else {
+							editor.setCursor((cursorHead.line - 1), 0);
+						}
 					}
-					console.log("Alt+↑ pressed")
 				}
 			}
 		});
@@ -22,15 +35,24 @@ export default class MyPlugin extends Plugin {
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
 			if (keyboardPressEvent.getModifierState("Alt")) {
 				if (keyboardPressEvent.key == "ArrowDown") {
-					let cursor = editor.getCursor();
+					let cursorHead = editor.getCursor("head");
+					let cursorAnchor = editor.getCursor("anchor");
 					let doc = editor.getDoc();
-					let lineLength = doc.getLine(cursor.line).length;
-					if (cursor.ch != lineLength) {
-						editor.setCursor(cursor.line, lineLength);
-					} else {
-						editor.setCursor((cursor.line + 1), doc.getLine(cursor.line + 1).length);
+					let lineLength = doc.getLine(cursorHead.line).length;
+					if (keyboardPressEvent.getModifierState("Shift")) { // select down
+						console.log("alt and shift are held");
+						if (cursorHead.ch != lineLength) {
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line, ch:lineLength}, {scroll: true});
+						} else {
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line + 1, ch:doc.getLine(cursorHead.line + 1).length}, {scroll:true});
+						}
+					} else { // move down
+						if (cursorHead.ch != lineLength) {
+							editor.setCursor(cursorHead.line, lineLength);
+						} else {
+							editor.setCursor((cursorHead.line + 1), doc.getLine(cursorHead.line + 1).length);
+						}
 					}
-					console.log("Alt+↓ pressed")
 				}
 			}
 		});
