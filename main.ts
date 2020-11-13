@@ -42,9 +42,9 @@ export default class MyPlugin extends Plugin {
 					if (keyboardPressEvent.getModifierState("Shift")) { // select down
 						console.log("alt and shift are held");
 						if (cursorHead.ch != lineLength) {
-							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line, ch:lineLength}, {scroll: true});
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line + 1, ch:0}, {scroll: true});
 						} else {
-							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line + 1, ch:doc.getLine(cursorHead.line + 1).length}, {scroll:true});
+							doc.setSelection({line:cursorAnchor.line, ch:cursorAnchor.ch}, {line:cursorHead.line + 1, ch:0}, {scroll:true});
 						}
 					} else { // move down
 						if (cursorHead.ch != lineLength) {
