@@ -3,13 +3,11 @@ import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian'
 export default class MyPlugin extends Plugin {
 	onload() {
 		console.log('Loading the macOS Keyboard Navigation plugin.');
-		let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
-
-		let selectionDirection = "";
 		
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
 			if (keyboardPressEvent.getModifierState("Alt")) {
 				if (keyboardPressEvent.key == "ArrowUp") {
+					let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
 					let cursorHead = editor.getCursor("head");
 					let cursorAnchor = editor.getCursor("anchor");
 					if (keyboardPressEvent.getModifierState("Shift")) { // select up
@@ -35,6 +33,7 @@ export default class MyPlugin extends Plugin {
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
 			if (keyboardPressEvent.getModifierState("Alt")) {
 				if (keyboardPressEvent.key == "ArrowDown") {
+					let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
 					let cursorHead = editor.getCursor("head");
 					let cursorAnchor = editor.getCursor("anchor");
 					let doc = editor.getDoc();
