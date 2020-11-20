@@ -5,7 +5,7 @@ export default class MyPlugin extends Plugin {
 		console.log('Loading the macOS Keyboard Navigation plugin.');
 		
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
-			if (keyboardPressEvent.getModifierState("Alt")) {
+			if (keyboardPressEvent.getModifierState("Alt") && !((keyboardPressEvent.getModifierState("Control") || (keyboardPressEvent.getModifierState("Meta"))))) {
 				if (keyboardPressEvent.key == "ArrowUp") {
 					let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
 					let cursorHead = editor.getCursor("head");
@@ -31,7 +31,7 @@ export default class MyPlugin extends Plugin {
 		});
 
 		this.registerDomEvent(document, 'keydown', (keyboardPressEvent: KeyboardEvent) => {
-			if (keyboardPressEvent.getModifierState("Alt")) {
+			if (keyboardPressEvent.getModifierState("Alt") && !((keyboardPressEvent.getModifierState("Control") || (keyboardPressEvent.getModifierState("Meta"))))) {
 				if (keyboardPressEvent.key == "ArrowDown") {
 					let editor = this.app.workspace.activeLeaf.view.sourceMode.cmEditor;
 					let cursorHead = editor.getCursor("head");
